@@ -1,6 +1,14 @@
 import { useState } from 'react'
 import './App.css'
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth"
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut,
+  GithubAuthProvider,
+  FacebookAuthProvider,
+  TwitterAuthProvider
+} from "firebase/auth"
 import app from '../firebase.confiq'
 
 function App() {
@@ -9,6 +17,9 @@ function App() {
 
   const auth = getAuth(app)
   const googleProvider = new GoogleAuthProvider()
+  const githubProvider = new GithubAuthProvider()
+  const facebookProvider = new FacebookAuthProvider()
+  const twitterProvider = new TwitterAuthProvider()
 
   const googleSignInHandle = () => {
     signInWithPopup(auth, googleProvider)
@@ -18,6 +29,28 @@ function App() {
       .catch(error => {
         console.log(error.message)
       })
+  }
+
+  const githubSignInHandle = () => {
+    signInWithPopup(auth, githubProvider)
+      .then(result => {
+        console.log(result.user)
+        setUser(result.user)
+      })
+      .catch(error => {
+        console.log(error.message)
+      })
+  }
+
+  const facebookSignInHandle = () => {
+    signInWithPopup(auth, facebookProvider)
+      .then(result => setUser(result.user))
+      .catch(error => console.log(error.message))
+  }
+  const twitterSignInHandle = () => {
+    signInWithPopup(auth, twitterProvider)
+      .then(result => setUser(result.user))
+      .catch(error => console.log(error.message))
   }
 
   const logoutHandle = () => {
@@ -45,8 +78,9 @@ function App() {
       }
       {!user ? <div className="flex items-center gap-2 justify-center my-4">
         <button onClick={() => googleSignInHandle()} className='btn btn-outline btn-info btn-sm'>Google signIn</button>
-        <button className='btn btn-outline btn-info btn-sm'>Github signIn</button>
-        <button className='btn btn-outline btn-info btn-sm'>Twitter signIn</button>
+        <button onClick={() => githubSignInHandle()} className='btn btn-outline btn-info btn-sm'>Github signIn</button>
+        <button onClick={() => facebookSignInHandle()} className='btn btn-outline btn-info btn-sm'>Facebook signIn</button>
+        <button onClick={() => twitterSignInHandle()} className='btn btn-outline btn-info btn-sm'>Twitter signIn</button>
       </div> :
         <button onClick={() => logoutHandle()} className='btn btn-outline btn-error btn-sm'>Logout</button>
       }
